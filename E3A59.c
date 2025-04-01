@@ -31,7 +31,7 @@ int main(void) {
     printf("    ~~~~~~~~~~~~~~~\n");
 
     printf("按enter繼續...");
-    getchar();  // 等待使用者按任意鍵繼續
+    getchar();
     system("clear");
    
     printf("請輸入四位數密碼: ");
@@ -58,13 +58,13 @@ int main(void) {
 
         // 判斷輸入類型
         if (ch >= 'A' && ch <= 'Z') {
-            printf("\n你輸入的是 大寫字母 (Uppercase)！\n");
+            printf("\n你輸入的是 大寫字母！\n");
         }
         else if (ch >= 'a' && ch <= 'z') {
-            printf("\n你輸入的是 小寫字母 (Lowercase)！\n");
+            printf("\n你輸入的是 小寫字母 ！\n");
         }
         else if (ch >= '0' && ch <= '9') {
-            printf("\n你輸入的是 數字 (Digit)！\n");
+            printf("\n你輸入的是 數字 ！\n");
         }
         else {
             printf("\n你輸入的是 特殊符號！這是你的個人資訊：\n");
