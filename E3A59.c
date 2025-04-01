@@ -53,7 +53,7 @@ int main(void) {
     printf("|  ˋ0ˊ～～～ ˋ9ˊ: 數字    |\n");
     printf("|  --輸入其他-- :班級座號  |\n");
     printf("-------------------------\n");
-    printf("請輸入一個字元： ");
+    printf("請輸入一個字元：");
     scanf(" %c", &ch);
 
         // 判斷輸入類型
@@ -73,7 +73,6 @@ int main(void) {
         }
 
         printf("\n 按任意鍵結束程式...");
-        getchar();
     return 0;
 
 }
