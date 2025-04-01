@@ -58,10 +58,10 @@ int main(void) {
 
         // 判斷輸入類型
         if (ch >= 'A' && ch <= 'Z') {
-            printf("\n 你輸入的是 大寫字母 (Uppercase)！\n");
+            printf("\n你輸入的是 大寫字母 (Uppercase)！\n");
         }
         else if (ch >= 'a' && ch <= 'z') {
-            printf("\n 你輸入的是 小寫字母 (Lowercase)！\n");
+            printf("\n你輸入的是 小寫字母 (Lowercase)！\n");
         }
         else if (ch >= '0' && ch <= '9') {
             printf("\n你輸入的是 數字 (Digit)！\n");
