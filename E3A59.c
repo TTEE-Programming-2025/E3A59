@@ -18,8 +18,7 @@ int main(void) {
     printf(" _________|\n");
 
     // 顯示聖誕樹
-    printf("        \n");
-
+    printf("\n");
     printf("          o\n");
     printf("         /_\\\n");
     printf("        /_ _\\\n");
