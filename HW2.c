@@ -57,8 +57,8 @@ int main(void) {
             scanf(" %c", &choice);
             choice = tolower(choice);
 
-            switch (choice) {
-                case 'a':
+            if (choice == 'a'){
+                while (1) {
                     printf("\n直角三角形：\n");
                     printf("|\\\n");
                     printf("| \\\n");
@@ -68,23 +68,38 @@ int main(void) {
                     printf(" -----\n");
                     printf("\n");
                     break;
-                case 'b':
-                    printf("\n乘法表：\n");
-                    for (int i = 1; i <= 9; i++) {
-                        for (int j = 1; j <= 9; j++) {
-                            printf("%d×%d=%2d  ", i, j, i*j);
-                        }
-                        printf("\n");
-                    }
-                    break;
-                case 'c':
-                    printf("結束程式，掰掰～\n");
-                    break;
-                default:
-                    printf("輸入錯誤，請重新輸入 a、b 或 c！\n");
+                }
             }
-        } while (choice != 'c');
-
-        return 0;
-  
-}
+            else if (choice == 'b'){
+                printf("\n乘法表：\n");
+                for (int i = 1; i <= 9; i++) {
+                    for (int j = 1; j <= 9; j++) {
+                        printf("%d×%d=%2d  ", i, j, i*j);
+                    }
+                    printf("\n");
+                }
+                    
+                
+            }
+                        else if (choice == 'c') {
+                                    char again;
+                                    while (1) {
+                                        printf("Continue? (y/n): ");
+                                        scanf(" %c", &again);
+                                        again = tolower(again);
+                                        
+                                        if (again == 'y') {
+                                            break; // 回到主選單
+                                        } else if (again == 'n') {
+                                            printf("感謝使用，程式結束！\n");
+                                            return 0;
+                                        } else {
+                                            printf("輸入錯誤，請輸入 y 或 n！\n");
+                                        }
+                                    }
+                                }
+                                else {
+                                    printf("輸入錯誤，請輸入 a、b 或 c！\n");
+                                }
+                            } while (1);
+                        }
