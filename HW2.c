@@ -6,6 +6,7 @@
 //
 
 #include <stdio.h>
+#include <ctype.h>
 
 int main(void) {
     int password = 2025;
@@ -41,6 +42,49 @@ int main(void) {
     if (a == 3) {
         printf("警告：密碼錯誤三次，系統結束！\n");
     }
+    char choice;
 
-    return 0;
+        do {
+            // 顯示主選單
+            printf("----------------------------------\n");
+            printf("|          主選單                |\n");
+            printf("|--------------------------------|\n");
+            printf("| a. 畫出直角三角形              |\n");
+            printf("| b. 顯示乘法表                  |\n");
+            printf("| c. 結束                       |\n");
+            printf("----------------------------------\n");
+            printf("請選擇一個選項 (a/b/c)：");
+            scanf(" %c", &choice);
+            choice = tolower(choice);
+
+            switch (choice) {
+                case 'a':
+                    printf("\n直角三角形：\n");
+                    printf("|\\\n");
+                    printf("| \\\n");
+                    printf("|  \\\n");
+                    printf("|   \\\n");
+                    printf("|    \\\n");
+                    printf(" -----\n");
+                    printf("\n");
+                    break;
+                case 'b':
+                    printf("\n乘法表：\n");
+                    for (int i = 1; i <= 9; i++) {
+                        for (int j = 1; j <= 9; j++) {
+                            printf("%d×%d=%2d  ", i, j, i*j);
+                        }
+                        printf("\n");
+                    }
+                    break;
+                case 'c':
+                    printf("結束程式，掰掰～\n");
+                    break;
+                default:
+                    printf("輸入錯誤，請重新輸入 a、b 或 c！\n");
+            }
+        } while (choice != 'c');
+
+        return 0;
+  
 }
