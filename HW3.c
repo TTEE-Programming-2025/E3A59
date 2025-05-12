@@ -8,9 +8,9 @@
 #define COLS 9
 #define MAX_RESERVED 10
 
-char seats[ROWS][COLS]; // 儲存座位狀態
+char seats[ROWS][COLS]; // Store seat status
 
-// 初始化座位陣列為 '-'，並隨機選出 10 個座位設為 '*'
+// Initialize seats as '-' and randomly reserve 10 seats as '*'
 void initializeSeats() {
     for (int i = 0; i < ROWS; i++)
         for (int j = 0; j < COLS; j++)
@@ -27,7 +27,8 @@ void initializeSeats() {
         }
     }
 }
-// 將建議座位標記為 '*'
+
+// Confirm the suggested seats by changing '@' to '*'
 void confirmSuggestedSeats() {
     for (int i = 0; i < ROWS; i++)
         for (int j = 0; j < COLS; j++)
@@ -35,7 +36,7 @@ void confirmSuggestedSeats() {
                 seats[i][j] = '*';
 }
 
-// 清除所有 '@' 建議座位
+// Clear all suggested seats '@'
 void clearSuggestions() {
     for (int i = 0; i < ROWS; i++)
         for (int j = 0; j < COLS; j++)
@@ -43,8 +44,7 @@ void clearSuggestions() {
                 seats[i][j] = '-';
 }
 
-
-// 顯示座位表
+// Display the current seat map
 void displaySeats() {
     printf("   ");
     for (int i = 1; i <= COLS; i++) {
@@ -61,80 +61,86 @@ void displaySeats() {
     }
 }
 
-
 int main(void) {
     int password = 2025;
     int input;
     int attempts = 0;
 
-    // 歡迎畫面
+    // Welcome screen
     printf("========================================\n");
     printf("=                  E3A59               =\n");
     printf("=                                      =\n");
-    printf("=                  蔡易霖               =\n");
+    printf("=                  Yi-Lin Tsai         =\n");
     printf("=                                      =\n");
     printf("=                                      =\n");
     printf("=              /\\  /\\                =\n");
-    printf("=             ( 。  。 )    /\\         =\n");
+    printf("=             ( o  o )    /\\         =\n");
     printf("=              ||   || \\ // \\        =\n");
     printf("=              ||   || //              =\n");
     printf("=             ()----()/                =\n");
-    printf("=   雖然很難理解但他確實是貓               =\n");
+    printf("=     It's hard to tell, but it's a cat=\n");
     printf("========================================\n");
     printf("\n\n");
 
-    // 密碼驗證
+    // Password verification loop
     while (attempts < 3) {
-        printf("請輸入4位數密碼：");
-        scanf("%d", &input);
+        printf("Enter 4-digit password: ");
+
+        if (scanf("%d", &input) != 1) {
+            printf("Invalid input format. Please enter 4 digits.\n");
+            while (getchar() != '\n');
+            continue;
+        }
 
         if (input == password) {
-            printf("密碼正確！成功進入下一步！\n");
+            printf("Password correct! Access granted.\n");
             break;
         } else {
             attempts++;
             if (attempts < 3) {
-                printf("密碼錯誤，請再試一次！目前錯誤次數：%d\n", attempts);
+                printf("Incorrect password. Try again. Attempts: %d\n", attempts);
             } else {
-                printf("警告：密碼錯誤三次，系統結束！\n");
+                printf("Warning: Password incorrect three times. Exiting system.\n");
                 return 0;
             }
         }
+        while (getchar() != '\n');
     }
 
-    initializeSeats(); // 初始化座位
+    initializeSeats(); // Initialize the seat map
 
     char choice;
     while (1) {
+        // Menu options
         printf("\n----------[Booking System]----------\n");
-        printf("|   a. Available seats             |\n");
-        printf("|   b. Arrange for you             |\n");
-        printf("|   c. Choose by yourself          |\n");
+        printf("|   a. View available seats        |\n");
+        printf("|   b. Let system arrange for you  |\n");
+        printf("|   c. Choose seats manually        |\n");
         printf("|   d. Exit                        |\n");
         printf("------------------------------------\n");
-        printf("請選擇操作：");
+        printf("Choose an option: ");
         scanf(" %c", &choice);
 
         switch (tolower(choice)) {
             case 'a':
                 displaySeats();
-                printf("按下 Enter 鍵回主選單...\n");
-                while (getchar() != '\n'); // 清掉前面緩衝
-                getchar(); // 等待使用者按下 enter
+                printf("Press Enter to return to menu...\n");
+                while (getchar() != '\n');
+                getchar();
                 break;
             case 'b': {
                 int num;
-                printf("請輸入需要的座位數量 (1~4)：");
+                printf("Enter number of seats to book (1~4): ");
                 scanf("%d", &num);
 
                 if (num < 1 || num > 4) {
-                    printf("輸入錯誤，請輸入 1 到 4！\n");
+                    printf("Invalid number. Please enter between 1 and 4.\n");
                     break;
                 }
 
                 int found = 0;
 
-                // 同列找連續座位（1~3 or 4 人）
+                // Try to find seats in a single row
                 for (int i = 0; i < ROWS && !found; i++) {
                     for (int j = 0; j <= COLS - num; j++) {
                         int ok = 1;
@@ -154,7 +160,7 @@ int main(void) {
                     }
                 }
 
-                // 特例：4人時找兩列兩個相同欄位（前後列）
+                // Special case: 4-person 2x2 block if row option fails
                 if (num == 4 && !found) {
                     for (int i = 0; i < ROWS - 1 && !found; i++) {
                         for (int j = 0; j < COLS - 1; j++) {
@@ -169,24 +175,23 @@ int main(void) {
                 }
 
                 if (!found) {
-                    printf("找不到可安排的座位，請嘗試其他數量或選項。\n");
+                    printf("No suitable seats found. Try other options.\n");
                     break;
                 }
 
-                // 顯示安排結果
                 displaySeats();
                 char confirm;
-                printf("是否滿意這樣的安排？(y/n)：");
+                printf("Are you satisfied with the arrangement? (y/n): ");
                 scanf(" %c", &confirm);
 
                 if (tolower(confirm) == 'y') {
                     confirmSuggestedSeats();
-                    printf("已為您完成預約，按 Enter 回主選單...\n");
+                    printf("Booking confirmed. Press Enter to continue...\n");
                     while (getchar() != '\n');
                     getchar();
                 } else {
                     clearSuggestions();
-                    printf("已取消本次安排，按 Enter 回主選單...\n");
+                    printf("Booking canceled. Press Enter to continue...\n");
                     while (getchar() != '\n');
                     getchar();
                 }
@@ -196,19 +201,15 @@ int main(void) {
                 char input[10];
                 int row, col;
 
-                printf("請依序輸入您想預訂的座位（格式: 列-行，例如 1-2），輸入 done 結束：\n");
-
+                printf("Enter seats to book in format row-col (e.g., 1-2). Type 'done' to finish.\n");
                 while (1) {
-                    printf("輸入座位：");
+                    printf("Enter seat: ");
                     scanf("%s", input);
 
-                    if (strcmp(input, "done") == 0) {
-                        break;
-                    }
+                    if (strcmp(input, "done") == 0) break;
 
-                    // 格式檢查：需為 X-Y 形式
                     if (strlen(input) != 3 || input[1] != '-' || !isdigit(input[0]) || !isdigit(input[2])) {
-                        printf("格式錯誤，請重新輸入（格式為 列-行）：\n");
+                        printf("Invalid format. Use row-col format.\n");
                         continue;
                     }
 
@@ -216,45 +217,57 @@ int main(void) {
                     col = input[2] - '0';
 
                     if (row < 1 || row > 9 || col < 1 || col > 9) {
-                        printf("超出範圍，請輸入 1~9 的列與行。\n");
+                        printf("Out of range. Use 1~9 for row and column.\n");
                         continue;
                     }
 
-                    // 座標轉換成陣列索引
                     int i = 9 - row;
                     int j = col - 1;
 
                     if (seats[i][j] == '*') {
-                        printf("該座位已被預訂，請重新選擇。\n");
+                        printf("Seat already reserved. Choose another.\n");
                     } else if (seats[i][j] == '@') {
-                        printf("該座位已在您的選擇中，請選擇其他位置。\n");
+                        printf("Seat already selected. Choose another.\n");
                     } else {
                         seats[i][j] = '@';
-                        printf("成功選擇 [%d-%d]\n", row, col);
+                        printf("Seat [%d-%d] selected.\n", row, col);
                     }
                 }
 
-                // 顯示選擇結果
-                printf("\n您選擇的座位如下：\n");
+                printf("\nSelected seats:\n");
                 displaySeats();
 
-                printf("若無誤，按 Enter 確認選擇，將完成預約...\n");
-                while (getchar() != '\n'); // 清除緩衝區
+                printf("If correct, press Enter to confirm...\n");
+                while (getchar() != '\n');
                 getchar();
-
-                confirmSuggestedSeats(); // 儲存使用者選擇
+                confirmSuggestedSeats();
                 break;
             }
-
-
             case 'd':
-                printf("感謝使用本系統，掰掰喵～\n");
+                printf("Goodbye!\n");
                 return 0;
             default:
-                printf("功能尚未實作或輸入錯誤，請重新輸入。\n");
+                printf("Invalid option. Please try again.\n");
         }
     }
 
     return 0;
 }
 
+/*
+==============================================
+Discussion and Reflection:
+
+In this assignment, I learned how to design a simple seat reservation system using C programming.
+I practiced using 2D arrays to represent seat states and how to apply nested loops and conditional
+statements to handle seat arrangement logic. I also dealt with string processing and input validation
+(e.g., format check for row-col input) using functions like isdigit().
+
+Implementing the auto-arrange and manual selection features helped me understand how to simulate
+real-world systems with basic logic. Adding user prompts and validation improved the user experience.
+Functions like confirmSuggestedSeats() and clearSuggestions() also helped me write modular code.
+
+Although the logic was a bit tricky at times, I successfully managed to finish all functions with clear
+feedback and control flow. Overall, this project improved my coding skills and confidence in C language.
+==============================================
+*/
