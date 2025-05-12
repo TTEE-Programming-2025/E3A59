@@ -47,3 +47,10 @@ int main(void) {
     if (attempts == 3) {
         printf("警告：密碼錯誤三次，系統結束！\n");
         return 0; // 密碼錯三次，直接結束
+
+        printf("----------[Booking System]----------\n");
+        printf("|   a. Available seats             |\n");
+        printf("|   b. Arrange for you             |\n");
+        printf("|   c. Choose by yourself          |\n");
+        printf("|   d. Exit                        |\n");
+        printf("------------------------------------\n");
