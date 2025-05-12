@@ -27,6 +27,22 @@ void initializeSeats() {
         }
     }
 }
+// 將建議座位標記為 '*'
+void confirmSuggestedSeats() {
+    for (int i = 0; i < ROWS; i++)
+        for (int j = 0; j < COLS; j++)
+            if (seats[i][j] == '@')
+                seats[i][j] = '*';
+}
+
+// 清除所有 '@' 建議座位
+void clearSuggestions() {
+    for (int i = 0; i < ROWS; i++)
+        for (int j = 0; j < COLS; j++)
+            if (seats[i][j] == '@')
+                seats[i][j] = '-';
+}
+
 
 // 顯示座位表
 void displaySeats() {
@@ -44,6 +60,7 @@ void displaySeats() {
         printf("\n");
     }
 }
+
 
 int main(void) {
     int password = 2025;
@@ -105,6 +122,131 @@ int main(void) {
                 while (getchar() != '\n'); // 清掉前面緩衝
                 getchar(); // 等待使用者按下 enter
                 break;
+            case 'b': {
+                int num;
+                printf("請輸入需要的座位數量 (1~4)：");
+                scanf("%d", &num);
+
+                if (num < 1 || num > 4) {
+                    printf("輸入錯誤，請輸入 1 到 4！\n");
+                    break;
+                }
+
+                int found = 0;
+
+                // 同列找連續座位（1~3 or 4 人）
+                for (int i = 0; i < ROWS && !found; i++) {
+                    for (int j = 0; j <= COLS - num; j++) {
+                        int ok = 1;
+                        for (int k = 0; k < num; k++) {
+                            if (seats[i][j + k] != '-') {
+                                ok = 0;
+                                break;
+                            }
+                        }
+                        if (ok) {
+                            for (int k = 0; k < num; k++) {
+                                seats[i][j + k] = '@';
+                            }
+                            found = 1;
+                            break;
+                        }
+                    }
+                }
+
+                // 特例：4人時找兩列兩個相同欄位（前後列）
+                if (num == 4 && !found) {
+                    for (int i = 0; i < ROWS - 1 && !found; i++) {
+                        for (int j = 0; j < COLS - 1; j++) {
+                            if (seats[i][j] == '-' && seats[i][j + 1] == '-' &&
+                                seats[i + 1][j] == '-' && seats[i + 1][j + 1] == '-') {
+                                seats[i][j] = seats[i][j + 1] = seats[i + 1][j] = seats[i + 1][j + 1] = '@';
+                                found = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!found) {
+                    printf("找不到可安排的座位，請嘗試其他數量或選項。\n");
+                    break;
+                }
+
+                // 顯示安排結果
+                displaySeats();
+                char confirm;
+                printf("是否滿意這樣的安排？(y/n)：");
+                scanf(" %c", &confirm);
+
+                if (tolower(confirm) == 'y') {
+                    confirmSuggestedSeats();
+                    printf("已為您完成預約，按 Enter 回主選單...\n");
+                    while (getchar() != '\n');
+                    getchar();
+                } else {
+                    clearSuggestions();
+                    printf("已取消本次安排，按 Enter 回主選單...\n");
+                    while (getchar() != '\n');
+                    getchar();
+                }
+                break;
+            }
+            case 'c': {
+                char input[10];
+                int row, col;
+
+                printf("請依序輸入您想預訂的座位（格式: 列-行，例如 1-2），輸入 done 結束：\n");
+
+                while (1) {
+                    printf("輸入座位：");
+                    scanf("%s", input);
+
+                    if (strcmp(input, "done") == 0) {
+                        break;
+                    }
+
+                    // 格式檢查：需為 X-Y 形式
+                    if (strlen(input) != 3 || input[1] != '-' || !isdigit(input[0]) || !isdigit(input[2])) {
+                        printf("格式錯誤，請重新輸入（格式為 列-行）：\n");
+                        continue;
+                    }
+
+                    row = input[0] - '0';
+                    col = input[2] - '0';
+
+                    if (row < 1 || row > 9 || col < 1 || col > 9) {
+                        printf("超出範圍，請輸入 1~9 的列與行。\n");
+                        continue;
+                    }
+
+                    // 座標轉換成陣列索引
+                    int i = 9 - row;
+                    int j = col - 1;
+
+                    if (seats[i][j] == '*') {
+                        printf("該座位已被預訂，請重新選擇。\n");
+                    } else if (seats[i][j] == '@') {
+                        printf("該座位已在您的選擇中，請選擇其他位置。\n");
+                    } else {
+                        seats[i][j] = '@';
+                        printf("成功選擇 [%d-%d]\n", row, col);
+                    }
+                }
+
+                // 顯示選擇結果
+                printf("\n您選擇的座位如下：\n");
+                displaySeats();
+
+                printf("若無誤，按 Enter 確認選擇，將完成預約...\n");
+                while (getchar() != '\n'); // 清除緩衝區
+                getchar();
+
+                confirmSuggestedSeats(); // 儲存使用者選擇
+                break;
+            }
+
+
             case 'd':
                 printf("感謝使用本系統，掰掰喵～\n");
                 return 0;
